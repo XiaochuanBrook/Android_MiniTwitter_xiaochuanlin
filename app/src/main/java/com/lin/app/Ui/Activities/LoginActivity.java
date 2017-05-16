@@ -112,7 +112,6 @@ public class LoginActivity extends BaseActivity implements LoginView, View.OnCli
     @Override
     public void onLoginFailed() {
         Toast.makeText(this, "Invalid account", Toast.LENGTH_SHORT).show();
-        hideProgress();
     }
 
     @Override

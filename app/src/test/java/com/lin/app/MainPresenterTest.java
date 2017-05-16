@@ -46,9 +46,15 @@ public class MainPresenterTest {
     }
 
     @Test
-    public void checkRefreshActionCallFindItem() {
+    public void checkRefreshActionCallfetchItem() {
         presenter.onRefresh();
-        verify(interactor, times(1)).fetchFeedItems(presenter);
+        verify(interactor, times(1)).fetchFeedItems(presenter, false);
+    }
+
+    @Test
+    public void checkLoadMoreActionCallfetchItem() {
+        presenter.onLoadMore();
+        verify(interactor, times(1)).fetchFeedItems(presenter, true);
     }
 
     @Test

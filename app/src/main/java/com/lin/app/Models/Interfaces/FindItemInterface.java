@@ -28,5 +28,5 @@ public interface FindItemInterface {
         void onFinished(List<FeedItem> items);
     }
 
-    void fetchFeedItems(final OnFinishedListener listener);
+    void fetchFeedItems(final OnFinishedListener listener, final boolean loadMore);
 }

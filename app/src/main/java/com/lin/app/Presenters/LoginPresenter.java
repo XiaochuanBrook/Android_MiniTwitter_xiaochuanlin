@@ -67,6 +67,7 @@ public class LoginPresenter implements LoginModelInterface.OnLoginFinishedListen
     public void onFailed() {
         if (loginView != null) {
             loginView.onLoginFailed();
+            loginView.hideProgress();
         }
     }
 

@@ -39,18 +39,18 @@ public class MainPresenter implements FindItemInterface.OnFinishedListener {
             mainView.showProgress();
         }
 
-        findItemsModelInterface.fetchFeedItems(this);
+        findItemsModelInterface.fetchFeedItems(this, false);
     }
 
     public void onRefresh() {
-        findItemsModelInterface.fetchFeedItems(this);
+        findItemsModelInterface.fetchFeedItems(this, false);
         if (mainView != null) {
             mainView.showMessage(String.format("view refreshed"));
         }
     }
 
     public void onLoadMore() {
-        findItemsModelInterface.fetchFeedItems(this);
+        findItemsModelInterface.fetchFeedItems(this, true);
     }
 
     public void onItemClicked(final FeedItem item) {

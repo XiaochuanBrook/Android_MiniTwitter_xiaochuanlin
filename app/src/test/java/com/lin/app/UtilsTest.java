@@ -49,6 +49,9 @@ public class UtilsTest {
 
     @Test
     public void PostToDataPoolTest() throws Exception {
+
+
+
         FeedItem item1 = new FeedItem();
         item1.setAuthor("Ken");
         FeedItem item2 = new FeedItem();
@@ -63,15 +66,31 @@ public class UtilsTest {
 
         DataPoolUtil.PostToDataPool(list);
 
-        verify(editor, times(1)).putString("DATA", "[{\"title\":\"Ken\"},{\"title\":\"Lily\",\"picture\":\"1.png\"},{\"description\":\"hello\"}]");
+        String data = "[{\"title\":\"Ken\"},{\"title\":\"Lily\",\"picture\":\"1.png\"},{\"description\":\"hello\"}]";
+
+        verify(editor, times(1)).putString("DATA", data);
         verify(editor, times(1)).apply();
+
+        when(sharedPreferences.getString("DATA", "")).thenReturn(data);
+
+        final int oldSize = DataPoolUtil.getDataFromDataPool(false).size();
+
+        list = new ArrayList<>();
+        list.add(item1);
+        DataPoolUtil.PostToDataPool(list);
+
+        data = "[{\"title\":\"Ken\"},{\"title\":\"Lily\",\"picture\":\"1.png\"},{\"description\":\"hello\"},{\"title\":\"Ken\"}]";
+        when(sharedPreferences.getString("DATA", "")).thenReturn(data);
+
+        final int updatedSize = DataPoolUtil.getDataFromDataPool(false).size();
+        assertEquals(oldSize + 1, updatedSize);
     }
 
     @Test
     public void getDataPoolTest() throws Exception {
         String data = "[{\"title\":\"Ken\"},{\"title\":\"Lily\",\"picture\":\"1.png\"},{\"description\":\"hello\"},{\"description\":\"hello\"},{\"description\":\"hello\"},{\"description\":\"hello\"},{\"description\":\"hello\"}]";
         when(sharedPreferences.getString("DATA", "")).thenReturn(data);
-        ArrayList<FeedItem> list = DataPoolUtil.getDataFromDataPool();
+        ArrayList<FeedItem> list = DataPoolUtil.getDataFromDataPool(false);
         FeedItem item1 = new FeedItem();
         item1.setAuthor("Ken");
         FeedItem item2 = new FeedItem();
@@ -106,10 +125,10 @@ public class UtilsTest {
         for(int i = 0; i<20; i++) {
             list.add(i, i);
         }
-        ArrayList result = getSubListFromFeedItemList(list);
+        ArrayList result = getSubListFromFeedItemList(list,true);
         // first time load more, size = 5 + 2
         assertEquals(result.size(),7);
-        result = getSubListFromFeedItemList(list);
+        result = getSubListFromFeedItemList(list,true);
         assertEquals(result.size(),9);
 
     }

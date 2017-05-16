@@ -57,6 +57,7 @@ public class DataPoolUtil {
         SharedPreferences.Editor editor = getSharePreferences().edit();
         editor.putString("DATA", json);
         editor.apply();
+        mDataSize = mDataSize + 1;
         return true;
     }
 
@@ -64,14 +65,14 @@ public class DataPoolUtil {
      * Helper method to get data from existing data pool
      * @return string value of the data
      */
-    public static ArrayList<FeedItem> getDataFromDataPool() {
+    public static ArrayList<FeedItem> getDataFromDataPool(final boolean loadMore) {
         final String data = getSharePreferences().getString("DATA", "");
         if (data.length() <= 0) {
             return null;
         }
         ArrayList<FeedItem> result = parseResultFromReferences(data);
         setListReference(result);
-        return getSubListFromFeedItemList(result);
+        return getSubListFromFeedItemList(result, loadMore);
     }
 
     /**
@@ -79,14 +80,15 @@ public class DataPoolUtil {
      * @param list the full data list
      * @return a sublist according to the mDataSize
      */
-    public static ArrayList<FeedItem> getSubListFromFeedItemList(final ArrayList<FeedItem> list) {
+    public static ArrayList<FeedItem> getSubListFromFeedItemList(final ArrayList<FeedItem> list, final boolean loadMore) {
         if (list == null || list.isEmpty()) {
             return null;
         }
 
         // on every time request 2 more items
-        mDataSize = mDataSize + 2;
-
+        if (loadMore) {
+            mDataSize = mDataSize + 2;
+        }
         final int lastPos = list.size();
         final int startPost = lastPos - mDataSize;
 
@@ -197,7 +199,7 @@ public class DataPoolUtil {
                 PostToDataPool(data);
                 setListReference(data);
                 // only show 5 items at first time data loading
-                data = getSubListFromFeedItemList(data);
+                data = getSubListFromFeedItemList(data, false);
                 mListener.onFinished(data);
             }
         }

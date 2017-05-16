@@ -35,7 +35,7 @@ public class MainScreenFeedsModel implements FindItemInterface {
     private String RAW_DATA_LOADED = "raw_data_loaded";
 
     @Override
-    public void fetchFeedItems(final OnFinishedListener listener) {
+    public void fetchFeedItems(final OnFinishedListener listener, final boolean loadMore) {
 
         mListener = listener;
         new Handler().postDelayed(new Runnable() {
@@ -49,7 +49,7 @@ public class MainScreenFeedsModel implements FindItemInterface {
                     editor.putBoolean(RAW_DATA_LOADED, true);
                     editor.commit();
                 } else {
-                    final ArrayList<FeedItem> data = getDataFromDataPool();
+                    final ArrayList<FeedItem> data = getDataFromDataPool(loadMore);
                     mListener.onFinished(data);
                 }
             }
